@@ -176,7 +176,7 @@ if not DEBUG:
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
-    "https://group-allocator-topaz.vercel.app/",
+    "https://group-allocator-topaz.vercel.app",
 ]
 
 # Email
