@@ -52,11 +52,11 @@ def register_student(full_name, index_number):
         )
 
         if selected_group is None:
-            raise AllocationError("The reserved group does not exist.")
+            raise AllocationError("The group does not exist.")
 
         if selected_group.students.count() >= selected_group.capacity:
             raise AllocationError(
-                "The reserved group has no remaining capacity."
+                "The group has no remaining capacity."
             )
 
         student = Student.objects.create(
@@ -82,7 +82,7 @@ def register_student(full_name, index_number):
 
     if not available_groups:
         raise AllocationError(
-            "Registration is closed. All group places are occupied or reserved."
+            "Registration is closed. All group places are occupied."
         )
 
     # Random selection among eligible groups.
