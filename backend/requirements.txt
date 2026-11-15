@@ -1,0 +1,10 @@
+@"
+Django
+djangorestframework
+psycopg2-binary
+python-decouple
+gunicorn
+whitenoise
+dj-database-url
+django-cors-headers
+"@ | Set-Content requirements.txt
