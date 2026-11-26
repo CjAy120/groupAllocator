@@ -178,7 +178,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "http://127.0.0.1:5173",
     "https://group-allocator-topaz.vercel.app",
-    "https://vercel.com/cjay120s-projects/group-allocator/A9bt5sT8abbSTW8EcSwFZzXq3iDw",
+    # "https://vercel.com/cjay120s-projects/group-allocator/A9bt5sT8abbSTW8EcSwFZzXq3iDw",
 ]
 
 # Email
