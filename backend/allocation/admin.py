@@ -1,5 +1,10 @@
 
+import csv
+
 from django.contrib import admin
+from django.http import HttpResponse
+from django.urls import path
+from django.utils import timezone
 
 from .models import Group, Student, ReservedIndex
 
@@ -63,7 +68,71 @@ class StudentAdmin(admin.ModelAdmin):
     search_fields = ("full_name", "index_number")
     list_filter = ("group",)
     readonly_fields = ("registered_at",)
-    ordering = ("full_name",)
+    ordering = ("group__number", "full_name")
+
+    change_list_template = "admin/students_changelist.html"
+
+    def get_urls(self):
+        urls = super().get_urls()
+
+        custom_urls = [
+            path(
+                "export-csv/",
+                self.admin_site.admin_view(self.export_csv),
+                name="students-export-csv",
+            ),
+        ]
+
+        return custom_urls + urls
+
+    def export_csv(self, request):
+        students = Student.objects.select_related(
+            "group"
+        ).order_by(
+            "group__number",
+            "full_name"
+        )
+
+        response = HttpResponse(
+            content_type="text/csv; charset=utf-8"
+        )
+
+        response["Content-Disposition"] = (
+            f'attachment; filename="registered_students_'
+            f'{timezone.now():%Y%m%d_%H%M%S}.csv"'
+        )
+
+        # Helps Excel recognize UTF-8 correctly.
+        response.write("\ufeff")
+
+        writer = csv.writer(response)
+
+        writer.writerow([
+            "Full Name",
+            "Index Number",
+            "Group",
+            "Registration Date",
+        ])
+
+        previous_group = None
+
+        for student in students:
+            if (
+                previous_group is not None
+                and previous_group != student.group.number
+            ):
+                writer.writerow([])
+
+            writer.writerow([
+                student.full_name,
+                student.index_number,
+                student.group.number,
+                student.registered_at,
+            ])
+
+            previous_group = student.group.number
+
+        return response
 
 
 @admin.register(ReservedIndex)
